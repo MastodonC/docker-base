@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function ensure_rsyslogd_running() {
+    RSYSLOG_PID=$(cat /var/run/rsyslogd.pid 2> /dev/null)
+    [ ! -z "${RSYSLOG_PID}" -a -e /proc/"${RSYSLOG_PID}" ] || rsyslogd
+    [ -e /proc/${RSYSLOG_PID} ]
+}
