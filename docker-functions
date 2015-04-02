@@ -5,3 +5,18 @@ function ensure_rsyslogd_running() {
     [ ! -z "${RSYSLOG_PID}" -a -e /proc/"${RSYSLOG_PID}" ] || rsyslogd
     [ -e /proc/${RSYSLOG_PID} ]
 }
+
+function ensure_jstatd_running() {
+    JSTATD_PID_FILE=/var/run/jstatd.pid
+    JSTATD_PID=$(cat ${JSTATD_PID_FILE} 2> /dev/null)
+    [ ! -z "${JSTATD_PID}" -a -e /proc/"${JSTATD_PID}" ] || {
+	local policy=/etc/mastodonc/jstatd.all.policy
+	[ -r ${policy} ] || cat > ${policy} <<'POLICY'
+grant codebase "file:${java.home}/../lib/tools.jar" {
+permission java.security.AllPermission;
+};
+POLICY
+	jstatd -J-Djava.security.policy=${policy} &
+	echo $! > ${JSTATD_PID_FILE}
+    }
+}
