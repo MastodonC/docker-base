@@ -1,11 +1,11 @@
 FROM ubuntu
 MAINTAINER Neale Swinnerton <neale@mastodonc.com>
 
-RUN apt-get update -qq && \
-    apt-get upgrade -qq -y && \
-    apt-get install -qq -y rsyslog && \
-    apt-get clean -qq && \
-    apt-get autoclean -qq
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -qq -y rsyslog && \
+    DEBIAN_FRONTEND=noninteractive apt-get clean -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get autoclean -qq
 
 ADD rsyslogd.conf /etc/rsyslogd.conf
 
